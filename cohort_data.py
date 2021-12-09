@@ -151,7 +151,11 @@ def all_data(filename):
 
     all_data = []
 
-    # TODO: replace this with your code
+    with open(filename, 'r') as cohort_data:
+
+        for line in cohort_data:
+            first, last, house, advisor, cohort_name = line.rstrip().split('|')
+            all_data.append((f'{first} {last}', house, advisor, cohort_name))
 
     return all_data
 
@@ -177,7 +181,9 @@ def get_cohort_for(filename, name):
       - str: the person's cohort or None
     """
 
-    # TODO: replace this with your code
+    for full_name, _, _, cohort_name in all_data(filename):
+        if full_name == name:
+            return cohort_name
 
 
 def find_duped_last_names(filename):
@@ -194,7 +200,22 @@ def find_duped_last_names(filename):
       - set[str]: a set of strings
     """
 
-    # TODO: replace this with your code
+
+    all_last_names = set()
+    repeat_last_names = set()
+
+    with open(filename, 'r') as cohort_data:
+
+        for line in cohort_data:
+            _, last, _, _, _ = line.rstrip().split('|')
+
+            if last in all_last_names:
+                repeat_last_names.add(last)
+          
+            all_last_names.add(last)
+            
+        return repeat_last_names
+                
 
 
 def get_housemates_for(filename, name):
@@ -209,7 +230,31 @@ def get_housemates_for(filename, name):
     {'Angelina Johnson', ..., 'Seamus Finnigan'}
     """
 
-    # TODO: replace this with your code
+    housemates = set()
+    spec_house = ''
+    spec_cohort_name = ''
+
+    for full_name, house, _, cohort_name in all_data(filename):
+        
+        if full_name == name:
+            spec_house = house
+            spec_cohort_name = cohort_name
+            break
+    
+    for full_name, house, _, cohort_name, in all_data(filename):
+        
+        if house == spec_house and cohort_name == spec_cohort_name and full_name != name:
+            housemates.add(full_name)
+    
+    return housemates
+
+            
+            
+            
+
+
+    
+            
 
 
 ##############################################################################
