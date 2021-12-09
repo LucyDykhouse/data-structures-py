@@ -17,9 +17,14 @@ def all_houses(filename):
 
     houses = set()
 
-    # TODO: replace this with your code
+    with open(filename, 'r') as cohort_data:
 
-    return houses
+        for line in cohort_data:
+            house = line.rstrip().split('|')[2]
+            if house:
+                houses.add(house)
+
+        return houses
 
 
 def students_by_cohort(filename, cohort='All'):
@@ -52,9 +57,15 @@ def students_by_cohort(filename, cohort='All'):
 
     students = []
 
-    # TODO: replace this with your code
+    with open(filename, 'r') as cohort_data:
 
-    return sorted(students)
+        for line in cohort_data:
+            first_name, last_name, _, _, cohort_name = line.rstrip().split('|')
+
+            if cohort_name not in ('I', 'G') and cohort in (cohort_name, 'All'):
+                students.append(f'{first_name} {last_name}')     
+
+        return sorted(students)
 
 
 def all_names_by_house(filename):
@@ -96,9 +107,27 @@ def all_names_by_house(filename):
     ghosts = []
     instructors = []
 
-    # TODO: replace this with your code
+    roster_names = ['dumbledore\'s army', 'gryffindor', 'hufflepuff', 'ravenclaw', 'slytherin', 'ghosts', 'instructors']
+    rosters = [dumbledores_army, gryffindor, hufflepuff, ravenclaw, slytherin, ghosts, instructors]
 
-    return []
+    with open(filename, 'r') as cohort_data:
+
+        for line in cohort_data:
+            first_name, last_name, house, _, cohort_name = line.rstrip().split('|')
+            full_name = f'{first_name} {last_name}'
+
+            if house.lower() in roster_names:
+                idx = roster_names.index(house.lower())
+                rosters[idx].append(full_name)
+            elif cohort_name == 'I':
+                rosters[6].append(full_name)
+            elif cohort_name == 'G':
+                rosters[5].append(full_name)      
+        
+        for list in rosters:
+            list.sort()
+
+        return rosters
 
 
 def all_data(filename):
